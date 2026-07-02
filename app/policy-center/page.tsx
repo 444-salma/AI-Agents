@@ -1,39 +1,39 @@
 import Link from 'next/link';
-import { ChevronRight, Building2, Shield, FileText, Zap, CreditCard } from 'lucide-react';
+import { ChevronRight, Building2, Shield, FileText, Zap, CreditCard, Info } from 'lucide-react';
 
 const policies = [
   {
     slug: 'corporate-onboarding',
-    title: 'Corporate Onboarding',
-    description: 'How to open a new corporate account from start to finish.',
+    title: 'Opening a New Corporate Account',
+    description: 'Step-by-step guide to onboarding a new corporate customer from start to finish.',
     icon: Building2,
     color: 'blue',
   },
   {
     slug: 'kyc',
-    title: 'KYC',
-    description: 'Know Your Customer — what information we must collect and verify.',
+    title: 'Customer Identity Verification (KYC)',
+    description: 'What information and documents we must collect to verify who the customer is.',
     icon: Shield,
     color: 'emerald',
   },
   {
     slug: 'required-documents',
-    title: 'Required Documents',
-    description: 'Complete list of mandatory documents for each banking service.',
+    title: 'Required Documents List',
+    description: 'Complete list of documents the customer must provide for each banking service.',
     icon: FileText,
     color: 'amber',
   },
   {
     slug: 'business-rules',
-    title: 'Business Rules',
-    description: 'Automated rules that govern approval, flagging, and restrictions.',
+    title: 'Approval Rules & Restrictions',
+    description: 'The rules that determine whether a request can be approved, flagged, or blocked.',
     icon: Zap,
     color: 'violet',
   },
   {
     slug: 'banking-services',
-    title: 'Corporate Banking Services',
-    description: 'Available banking products and their eligibility requirements.',
+    title: 'Banking Products & Services',
+    description: 'All available banking products and what the customer needs to qualify for each.',
     icon: CreditCard,
     color: 'rose',
   },
@@ -50,9 +50,19 @@ const colorMap: Record<string, { bg: string; icon: string; arrow: string }> = {
 export default function PolicyCenterPage() {
   return (
     <div className="max-w-3xl mx-auto px-6 py-10 space-y-8">
-      <div className="space-y-1">
+      <div className="space-y-2">
         <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Policy Center</h1>
-        <p className="text-sm text-slate-500">The bank&apos;s official policies — used by AI agents to generate every recommendation.</p>
+        <p className="text-sm text-slate-500 leading-relaxed">
+          This is the reference guide for all banking rules and requirements.
+          Each recommendation you see in the app is based on one of these policies.
+        </p>
+      </div>
+
+      <div className="flex items-start gap-3 bg-blue-50 dark:bg-blue-950/20 border border-blue-200/60 dark:border-blue-900/40 rounded-2xl px-4 py-3.5">
+        <Info className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
+        <p className="text-xs text-blue-700 dark:text-blue-400 leading-relaxed">
+          <span className="font-bold">How to use this section:</span> Click any policy below to read the full details. These policies are maintained by the Compliance team and cannot be changed here.
+        </p>
       </div>
 
       <div className="space-y-3">
@@ -79,8 +89,8 @@ export default function PolicyCenterPage() {
 
       <div className="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-2xl p-4">
         <p className="text-xs text-slate-500 text-center leading-relaxed">
-          All policies are maintained by the bank&apos;s Compliance and Risk teams.
-          AI agents consult this knowledge base before generating any recommendation.
+          All policies are owned by the bank&apos;s Compliance and Risk teams.
+          The recommendations you see in this app are always based on these official policies.
         </p>
       </div>
     </div>

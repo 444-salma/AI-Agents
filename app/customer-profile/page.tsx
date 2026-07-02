@@ -130,15 +130,18 @@ export default function CustomerProfile() {
 
   const statusCards = [
     {
-      icon: Building2, label: 'COMPANY',
-      value: ci.keyInsights.length > 0 ? 'Stable' : 'Review', detail: company.industry,
+      icon: Building2, label: 'Company',
+      value: ci.keyInsights.length > 0 ? 'Stable' : 'Review',
+      detail: company.industry,
+      hint: 'Company standing',
       gradient: 'from-blue-500 to-blue-600',
       bg: 'bg-blue-50/80 dark:bg-blue-950/20', border: 'border-blue-200/60 dark:border-blue-900/40',
       text: 'text-blue-700 dark:text-blue-300', dot: 'bg-blue-500',
     },
     {
-      icon: TrendingUp, label: 'FINANCIAL',
+      icon: TrendingUp, label: 'Financial Health',
       value: fa.healthLabel, detail: `Score: ${fa.healthScore}/100`,
+      hint: 'Based on latest statements',
       gradient: fa.healthScore >= 70 ? 'from-emerald-500 to-emerald-600' : 'from-amber-500 to-amber-600',
       bg: fa.healthScore >= 70 ? 'bg-emerald-50/80 dark:bg-emerald-950/20' : 'bg-amber-50/80 dark:bg-amber-950/20',
       border: fa.healthScore >= 70 ? 'border-emerald-200/60 dark:border-emerald-900/40' : 'border-amber-200/60 dark:border-amber-900/40',
@@ -146,9 +149,10 @@ export default function CustomerProfile() {
       dot: fa.healthScore >= 70 ? 'bg-emerald-500' : 'bg-amber-500',
     },
     {
-      icon: FileText, label: 'DOCUMENTS',
-      value: docIssues > 0 ? `${docIssues} Issue${docIssues > 1 ? 's' : ''}` : 'Complete',
-      detail: docIssues > 0 ? `${missing} missing, ${needsUpdate} expiring` : 'All valid',
+      icon: FileText, label: 'Documents',
+      value: docIssues > 0 ? `${docIssues} Need Attention` : 'All Good',
+      detail: docIssues > 0 ? `${missing} missing, ${needsUpdate} expiring` : 'All documents valid',
+      hint: 'Required banking documents',
       gradient: missing > 0 ? 'from-red-500 to-red-600' : needsUpdate > 0 ? 'from-amber-500 to-amber-600' : 'from-emerald-500 to-emerald-600',
       bg: missing > 0 ? 'bg-red-50/80 dark:bg-red-950/20' : needsUpdate > 0 ? 'bg-amber-50/80 dark:bg-amber-950/20' : 'bg-emerald-50/80 dark:bg-emerald-950/20',
       border: missing > 0 ? 'border-red-200/60 dark:border-red-900/40' : needsUpdate > 0 ? 'border-amber-200/60 dark:border-amber-900/40' : 'border-emerald-200/60 dark:border-emerald-900/40',
@@ -156,8 +160,9 @@ export default function CustomerProfile() {
       dot: missing > 0 ? 'bg-red-500' : needsUpdate > 0 ? 'bg-amber-500' : 'bg-emerald-500',
     },
     {
-      icon: ShieldCheck, label: 'POLICY',
-      value: comp.overallStatus, detail: `${comp.complianceScore}% compliant`,
+      icon: ShieldCheck, label: 'Policy Status',
+      value: comp.overallStatus, detail: `${comp.complianceScore}% complete`,
+      hint: 'Banking policy requirements',
       gradient: comp.overallStatus === 'Compliant' ? 'from-violet-500 to-violet-600' : 'from-amber-500 to-amber-600',
       bg: comp.overallStatus === 'Compliant' ? 'bg-violet-50/80 dark:bg-violet-950/20' : 'bg-amber-50/80 dark:bg-amber-950/20',
       border: comp.overallStatus === 'Compliant' ? 'border-violet-200/60 dark:border-violet-900/40' : 'border-amber-200/60 dark:border-amber-900/40',
@@ -167,10 +172,10 @@ export default function CustomerProfile() {
   ];
 
   const tabs = [
-    { id: 'overview' as const, label: 'Overview' },
-    { id: 'financials' as const, label: 'Financials' },
-    { id: 'documents' as const, label: `Documents${docIssues > 0 ? ` (${docIssues})` : ''}` },
-    { id: 'products' as const, label: 'Products' },
+    { id: 'overview' as const, label: 'Overview', hint: 'Summary & actions' },
+    { id: 'financials' as const, label: 'Financial Health', hint: 'Revenue & ratios' },
+    { id: 'documents' as const, label: `Documents${docIssues > 0 ? ` (${docIssues})` : ''}`, hint: 'Required paperwork' },
+    { id: 'products' as const, label: 'Banking Products', hint: 'Active accounts & facilities' },
   ];
 
   return (
@@ -227,7 +232,7 @@ export default function CustomerProfile() {
           <div className="mt-4 px-4 py-3.5 glass-card-blue rounded-2xl flex items-start gap-3">
             <Sparkles className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
             <div>
-              <p className="text-[10px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-1">AI Executive Summary</p>
+              <p className="text-[10px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-1">In Brief</p>
               <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                 {ci.executiveSummary.split('.').slice(0, 2).join('.') + '.'}
               </p>
@@ -238,9 +243,9 @@ export default function CustomerProfile() {
 
       {/* ── STATUS CARDS ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {statusCards.map(({ icon: Icon, label, value, detail, gradient, bg, border, text, dot }, i) => (
+        {statusCards.map(({ icon: Icon, label, value, detail, hint, gradient, bg, border, text, dot }, i) => (
           <div key={label}
-            className={`card-lift rounded-2xl border p-4 ${bg} ${border} space-y-3 animate-slide-up cursor-default`}
+            className={`card-lift rounded-2xl border p-4 ${bg} ${border} space-y-2 animate-slide-up cursor-default`}
             style={{ animationDelay: `${i * 80}ms`, opacity: 0 }}>
             <div className="flex items-center justify-between">
               <div className={`w-8 h-8 rounded-xl flex items-center justify-center bg-gradient-to-br ${gradient} shadow-sm`}>
@@ -252,7 +257,10 @@ export default function CustomerProfile() {
               <p className={`text-sm font-extrabold ${text}`}>{value}</p>
               <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{detail}</p>
             </div>
-            <p className="text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest">{label}</p>
+            <div>
+              <p className="text-xs font-bold text-slate-600 dark:text-slate-400">{label}</p>
+              <p className="text-[10px] text-slate-400 dark:text-slate-500">{hint}</p>
+            </div>
           </div>
         ))}
       </div>
@@ -267,7 +275,7 @@ export default function CustomerProfile() {
                 style={{ background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)' }}>
                 <Sparkles className="w-3.5 h-3.5 text-white" />
               </div>
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Recommended Next Action</span>
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Your Next Step</span>
             </div>
             <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${pMeta.badge}`}>{pMeta.label}</span>
           </div>
@@ -292,7 +300,7 @@ export default function CustomerProfile() {
         <div className="px-5 sm:px-6 pb-5 flex flex-wrap items-center gap-3">
           <button className="btn-press flex items-center gap-2 px-5 py-2.5 text-white text-sm font-bold rounded-xl shadow-ai-sm"
             style={{ background: 'linear-gradient(135deg, #1d4ed8, #4f46e5)' }}>
-            Take Action <ArrowRight className="w-4 h-4" />
+            Do This Now <ArrowRight className="w-4 h-4" />
           </button>
           {nba.additionalActions.length > 0 && (
             <span className="text-xs text-slate-400">+{nba.additionalActions.length} more actions queued</span>
@@ -308,13 +316,14 @@ export default function CustomerProfile() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 min-w-max text-xs font-semibold py-2.5 px-3 rounded-xl transition-all whitespace-nowrap ${
+              className={`flex-1 min-w-max flex flex-col items-center py-2.5 px-3 rounded-xl transition-all whitespace-nowrap ${
                 activeTab === tab.id
                   ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-sm'
                   : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'
               }`}
             >
-              {tab.label}
+              <span className="text-xs font-semibold">{tab.label}</span>
+              <span className={`text-[9px] mt-0.5 ${activeTab === tab.id ? 'text-slate-400' : 'text-slate-300 dark:text-slate-600'}`}>{tab.hint}</span>
             </button>
           ))}
         </div>
@@ -323,7 +332,7 @@ export default function CustomerProfile() {
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="glass-card rounded-2xl p-5 space-y-4 card-lift">
-              <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Company Details</p>
+              <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">About This Company</p>
               <div className="space-y-2.5">
                 {ci.customerProfile.map(f => (
                   <div key={f.label} className="row-hover flex items-start justify-between gap-4 py-1.5 px-2 rounded-xl -mx-2">
@@ -335,7 +344,7 @@ export default function CustomerProfile() {
             </div>
 
             <div className="glass-card rounded-2xl p-5 space-y-4 card-lift">
-              <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Key AI Insights</p>
+              <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">What We Found</p>
               <div className="space-y-2.5">
                 {ci.keyInsights.map((insight, i) => (
                   <div key={i} className="flex items-start gap-3 py-1.5 px-2 rounded-xl hover:bg-blue-50/50 dark:hover:bg-blue-950/10 transition-colors -mx-2">
@@ -350,7 +359,7 @@ export default function CustomerProfile() {
 
               {ci.relationshipHighlights.length > 0 && (
                 <div className="pt-3 border-t border-slate-100 dark:border-white/[0.06]">
-                  <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 mb-3">Timeline</p>
+                  <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 mb-3">Recent Events</p>
                   <div className="space-y-2">
                     {ci.relationshipHighlights.map((h, i) => (
                       <div key={i} className="flex items-start gap-2 group">
@@ -365,7 +374,7 @@ export default function CustomerProfile() {
 
             {nba.additionalActions.length > 0 && (
               <div className="sm:col-span-2 glass-card rounded-2xl p-5">
-                <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 mb-4">All Recommended Actions</p>
+                <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 mb-4">All Actions To Do</p>
                 <div className="space-y-2">
                   {[nba.primaryRecommendation, ...nba.additionalActions].map((a, i) => {
                     const m = priorityMeta[a.priority] || priorityMeta.Medium;
@@ -413,7 +422,7 @@ export default function CustomerProfile() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="glass-card rounded-2xl p-5 space-y-4 card-lift">
-                <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Key Ratios ({latest.year})</p>
+                <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Financial Indicators ({latest.year})</p>
                 <div className="space-y-3">
                   {[
                     { label: 'Current Ratio', value: `${latest.current_ratio?.toFixed(2)}x`, ok: latest.current_ratio >= 1.5 },
@@ -437,7 +446,7 @@ export default function CustomerProfile() {
               </div>
 
               <div className="glass-card rounded-2xl p-5 space-y-4 card-lift">
-                <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">AI Financial Analysis</p>
+                <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Health Assessment</p>
 
                 <div className="p-3.5 bg-slate-50/80 dark:bg-white/[0.04] rounded-2xl border border-slate-200/40 dark:border-white/[0.06]">
                   <p className="text-[11px] font-bold text-slate-400 mb-2">Health Score</p>
@@ -488,7 +497,7 @@ export default function CustomerProfile() {
         {activeTab === 'documents' && (
           <div className="glass-card rounded-2xl overflow-hidden">
             <div className="px-5 py-4 border-b border-slate-100 dark:border-white/[0.06] flex flex-wrap items-center justify-between gap-3">
-              <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Document Checklist</p>
+              <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Required Documents</p>
               <div className="flex items-center gap-3 text-[10px] font-bold text-slate-400">
                 <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-500" />Complete</span>
                 <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-500" />Expiring</span>
@@ -523,8 +532,7 @@ export default function CustomerProfile() {
               })}
             </div>
             <div className="px-5 py-3 bg-slate-50/60 dark:bg-white/[0.02] border-t border-slate-100 dark:border-white/[0.05] flex items-center justify-between text-xs text-slate-400">
-              <span>{comp.checklist.filter(d => d.status === 'Complete').length} of {comp.checklist.length} complete</span>
-              <span>{comp.complianceScore}% compliance score</span>
+              <span>{comp.checklist.filter(d => d.status === 'Complete').length} of {comp.checklist.length} documents complete</span>
             </div>
           </div>
         )}

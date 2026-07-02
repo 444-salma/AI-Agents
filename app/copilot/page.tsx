@@ -17,12 +17,12 @@ import { policyEngine } from '@/lib/policy-engine';
 const COMPANY_ID = '11111111-1111-1111-1111-111111111111';
 
 const suggestions = [
-  { text: 'Summarize this customer', icon: Brain },
+  { text: 'Give me a summary of this customer', icon: Brain },
   { text: 'What should I do next?', icon: Zap },
-  { text: 'Show missing documents', icon: FileText },
-  { text: 'Explain financial analysis', icon: TrendingUp },
-  { text: 'What is the KYC policy?', icon: ShieldCheck },
-  { text: 'List all active policies', icon: BookOpen },
+  { text: 'What documents are missing?', icon: FileText },
+  { text: 'How is their financial situation?', icon: TrendingUp },
+  { text: 'What does the bank require for this customer?', icon: ShieldCheck },
+  { text: 'Show me all the banking policies that apply', icon: BookOpen },
 ];
 
 type Message = {
@@ -189,7 +189,7 @@ export default function CopilotPage() {
             <div className="absolute inset-0 rounded-2xl animate-ping opacity-20"
               style={{ background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)' }} />
           </div>
-          <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">Loading customer context...</p>
+          <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">Getting customer information ready...</p>
         </div>
       </div>
     );
@@ -217,10 +217,11 @@ export default function CopilotPage() {
               </div>
 
               <div>
-                <h2 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100">AI Banking Copilot</h2>
+                <h2 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Ask About This Customer</h2>
                 <p className="text-sm text-slate-500 dark:text-slate-400 mt-1.5">
-                  Ask me anything about <span className="font-semibold text-blue-600 dark:text-blue-400">{ctx?.company.name}</span>
+                  What would you like to know about <span className="font-semibold text-blue-600 dark:text-blue-400">{ctx?.company.name}</span>?
                 </p>
+                <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">Select a question below or type your own.</p>
               </div>
 
               {/* Suggested prompts */}
@@ -283,7 +284,7 @@ export default function CopilotPage() {
 
                 {msg.role === 'assistant' && msg.sources && msg.sources.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 px-1">
-                    <span className="text-[10px] font-bold text-slate-300 dark:text-slate-600 uppercase tracking-wide">Sources</span>
+                    <span className="text-[10px] font-bold text-slate-300 dark:text-slate-600 uppercase tracking-wide">Based on</span>
                     {msg.sources.map(src => (
                       <span key={src} className="text-[10px] font-medium bg-slate-100/80 dark:bg-white/[0.05] text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full border border-slate-200/60 dark:border-white/[0.06]">
                         {src}
@@ -307,7 +308,7 @@ export default function CopilotPage() {
                   <span className="w-2 h-2 rounded-full bg-blue-500 typing-dot-1" />
                   <span className="w-2 h-2 rounded-full bg-violet-500 typing-dot-2" />
                   <span className="w-2 h-2 rounded-full bg-blue-500 typing-dot-3" />
-                  <span className="text-xs text-slate-400 ml-1.5 font-medium">AI is thinking...</span>
+                  <span className="text-xs text-slate-400 ml-1.5 font-medium">Looking it up...</span>
                 </div>
               </div>
             </div>
@@ -329,7 +330,7 @@ export default function CopilotPage() {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
-              placeholder="Ask about this customer..."
+              placeholder="Type your question here..."
               className="flex-1 bg-transparent text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 outline-none px-3 py-3.5"
             />
             <div className="pr-2 shrink-0">
@@ -344,7 +345,7 @@ export default function CopilotPage() {
             </div>
           </div>
           <p className="text-[10px] text-slate-300 dark:text-slate-600 text-center mt-2 font-medium">
-            AI Copilot provides decision-support only — not automatic approvals.
+            This assistant helps you prepare — all final decisions require your approval.
           </p>
         </div>
       </div>

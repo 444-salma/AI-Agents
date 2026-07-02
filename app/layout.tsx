@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Corporate Banking Intelligence Copilot',
+  title: 'Numou AI',
   description: 'AI-powered corporate banking relationship management platform',
 };
 

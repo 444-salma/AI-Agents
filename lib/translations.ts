@@ -2,7 +2,7 @@ export type Lang = 'en' | 'ar';
 
 const en = {
   // Sidebar
-  bankingCopilot: 'Banking Copilot',
+  bankingCopilot: 'Numou AI',
   aiPowered: 'AI-POWERED',
   navigation: 'Navigation',
   dashboard: 'Dashboard',
@@ -129,7 +129,7 @@ const en = {
 
 const ar: typeof en = {
   // الشريط الجانبي
-  bankingCopilot: 'المساعد المصرفي',
+  bankingCopilot: 'Numou AI',
   aiPowered: 'مدعوم بالذكاء الاصطناعي',
   navigation: 'القائمة',
   dashboard: 'لوحة التحكم',

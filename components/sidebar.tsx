@@ -7,14 +7,7 @@ import {
   UserCircle, Upload, Sparkles, ChevronRight,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-const nav = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard, badge: null },
-  { href: '/customer-profile', label: 'Customer Profile', icon: UserCircle, badge: null },
-  { href: '/customer-portal', label: 'Customer Portal', icon: Upload, badge: 'NEW' },
-  { href: '/copilot', label: 'AI Copilot', icon: MessageSquare, badge: 'AI' },
-  { href: '/policy-center', label: 'Policy Center', icon: BookOpen, badge: null },
-];
+import { useLang } from '@/lib/language-context';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -23,6 +16,16 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
+  const { lang, t } = useLang();
+  const isRTL = lang === 'ar';
+
+  const nav = [
+    { href: '/', label: t.dashboard, icon: LayoutDashboard, badge: null },
+    { href: '/customer-profile', label: t.customerProfile, icon: UserCircle, badge: null },
+    { href: '/customer-portal', label: t.customerPortal, icon: Upload, badge: 'NEW' },
+    { href: '/copilot', label: t.aiCopilot, icon: MessageSquare, badge: 'AI' },
+    { href: '/policy-center', label: t.policyCenter, icon: BookOpen, badge: null },
+  ];
 
   return (
     <>
@@ -30,9 +33,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-20 lg:hidden" onClick={onClose} />
       )}
       <aside className={cn(
-        'fixed top-0 left-0 h-full z-30 flex flex-col transition-transform duration-300 ease-in-out',
+        'fixed top-0 h-full z-30 flex flex-col transition-transform duration-300 ease-in-out',
         'w-64 sidebar-premium',
-        isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        isRTL ? 'right-0' : 'left-0',
+        isOpen ? 'translate-x-0' : isRTL ? 'translate-x-full lg:translate-x-0' : '-translate-x-full lg:translate-x-0'
       )}>
         {/* Logo */}
         <div className="flex items-center justify-between px-5 h-16 border-b border-white/[0.07] shrink-0">
@@ -43,10 +47,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             </div>
             <div>
-              <p className="text-[13px] font-semibold leading-tight text-white">Banking Copilot</p>
+              <p className="text-[13px] font-semibold leading-tight text-white">{t.bankingCopilot}</p>
               <div className="flex items-center gap-1 mt-0.5">
                 <Sparkles className="w-2.5 h-2.5 text-blue-400" />
-                <p className="text-[10px] text-white/40 leading-tight tracking-wide">AI-POWERED</p>
+                <p className="text-[10px] text-white/40 leading-tight tracking-wide">{t.aiPowered}</p>
               </div>
             </div>
           </div>
@@ -57,7 +61,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
         {/* Navigation */}
         <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-          <p className="text-[9px] font-bold text-white/25 uppercase tracking-[0.12em] px-3 pt-1 pb-2">Navigation</p>
+          <p className="text-[9px] font-bold text-white/25 uppercase tracking-[0.12em] px-3 pt-1 pb-2">{t.navigation}</p>
           {nav.map(({ href, label, icon: Icon, badge }) => {
             const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
             return (
@@ -76,7 +80,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 } : {}}
               >
                 {active && (
-                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-r-full bg-blue-400" />
+                  <span className={cn(
+                    'absolute top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-full bg-blue-400',
+                    isRTL ? 'right-0 rounded-l-full' : 'left-0 rounded-r-full'
+                  )} />
                 )}
                 <div className={cn(
                   'w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-all',
@@ -109,9 +116,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-[12px] font-semibold text-white/90 truncate">Ahmed Al-Rashid</p>
-              <p className="text-[10px] text-white/35 truncate">Relationship Manager</p>
+              <p className="text-[10px] text-white/35 truncate">{t.relationshipManager}</p>
             </div>
-            <ChevronRight className="w-3.5 h-3.5 text-white/20 group-hover:text-white/40 transition-colors shrink-0" />
+            <ChevronRight className={cn('w-3.5 h-3.5 text-white/20 group-hover:text-white/40 transition-colors shrink-0', isRTL && 'rotate-180')} />
           </div>
         </div>
       </aside>

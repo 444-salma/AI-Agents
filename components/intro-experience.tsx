@@ -7,6 +7,7 @@ import {
   Database, Users, BarChart3, FolderOpen, Clock,
   Lightbulb,
 } from 'lucide-react';
+import { useLang } from '@/lib/language-context';
 
 /* ─────────────────────────────────────────────
    TYPES
@@ -31,22 +32,6 @@ const CUSTOMERS: Customer[] = [
   { id: 'noor',     name: 'Noor Digital Technologies',    industry: 'Technology',            initials: 'ND', color: 'from-violet-600 to-violet-700', segment: 'Mid Corporate' },
 ];
 
-const RETRIEVE_STEPS = [
-  { icon: Building2,  label: 'Company Profile',           desc: 'Fetching from CRM' },
-  { icon: Database,   label: 'Banking Products',          desc: 'Loading account data' },
-  { icon: BarChart3,  label: 'Financial Statements',      desc: 'Retrieving 3-year history' },
-  { icon: FolderOpen, label: 'Customer Documents',        desc: 'Checking document store' },
-  { icon: Clock,      label: 'Relationship History',      desc: 'Loading previous interactions' },
-];
-
-const ANALYZE_STEPS = [
-  { icon: Building2,  name: 'Company Intelligence Agent', desc: 'Analyzing company profile and relationship history.' },
-  { icon: TrendingUp, name: 'Financial Analysis Agent',   desc: 'Reviewing financial statements and health indicators.' },
-  { icon: FileText,   name: 'Compliance & Document Agent',desc: 'Checking KYC status and required document completeness.' },
-  { icon: ShieldCheck,name: 'Policy Engine',              desc: 'Matching findings against active banking policies.' },
-  { icon: Lightbulb,  name: 'Recommendation Agent',       desc: 'Generating the best next action for the RM.' },
-];
-
 /* Timing constants (ms) */
 const RETRIEVE_STEP_MS  = 700;
 const ANALYZE_STEP_MS   = 1300;
@@ -63,6 +48,7 @@ function WelcomeScreen({ onStart }: { onStart: (c: Customer) => void }) {
   const [focused, setFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [visible, setVisible] = useState(false);
+  const { t } = useLang();
 
   useEffect(() => { setTimeout(() => setVisible(true), 80); }, []);
 
@@ -99,23 +85,23 @@ function WelcomeScreen({ onStart }: { onStart: (c: Customer) => void }) {
         {/* Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/15 bg-white/8 backdrop-blur-sm">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-xs font-bold text-white/70 uppercase tracking-widest">Corporate Banking AI</span>
+          <span className="text-xs font-bold text-white/70 uppercase tracking-widest">{t.corporateBankingAI}</span>
         </div>
 
         {/* Title */}
         <div className="space-y-3">
           <h1 className="text-[2.8rem] sm:text-5xl font-extrabold text-white leading-[1.05] tracking-tight">
-            Corporate Banking<br />
+            {t.corporateBankingAICopilot}<br />
             <span style={{
               background: 'linear-gradient(135deg, #93c5fd 0%, #a5b4fc 50%, #c4b5fd 100%)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-            }}>AI Copilot</span>
+            }}>{t.aiCopilotTitle}</span>
           </h1>
           <p className="text-base text-white/55 font-medium leading-relaxed max-w-md mx-auto">
-            AI-powered decision support for Corporate Relationship Managers.
+            {t.aiDecisionSupport}
           </p>
           <p className="text-sm text-white/35 leading-relaxed max-w-lg mx-auto">
-            Analyze corporate customers faster by bringing together company information, financial data, documents, and bank policies into one intelligent workspace.
+            {t.analyzeDescription}
           </p>
         </div>
 
@@ -133,14 +119,14 @@ function WelcomeScreen({ onStart }: { onStart: (c: Customer) => void }) {
               onChange={e => { setQuery(e.target.value); setSelected(null); }}
               onFocus={() => setFocused(true)}
               onBlur={() => setTimeout(() => setFocused(false), 150)}
-              placeholder="Search Corporate Customer..."
+              placeholder={t.searchCorporateCustomer}
               className={`flex-1 bg-transparent text-sm font-medium outline-none placeholder:font-normal transition-colors ${
                 focused ? 'text-slate-900 dark:text-slate-100 placeholder:text-slate-400' : 'text-white placeholder:text-white/40'
               }`}
             />
             {selected && (
               <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wide px-2 py-1 rounded-full bg-emerald-400/15 border border-emerald-400/25 shrink-0">
-                Selected
+                {t.selected}
               </span>
             )}
           </div>
@@ -150,7 +136,7 @@ function WelcomeScreen({ onStart }: { onStart: (c: Customer) => void }) {
             <div className="absolute top-full left-0 right-0 mt-2 rounded-2xl overflow-hidden shadow-2xl border border-white/10 z-20"
               style={{ background: 'rgba(15,23,42,0.96)', backdropFilter: 'blur(24px)' }}>
               <div className="px-3 py-2">
-                <p className="text-[10px] font-bold text-white/30 uppercase tracking-widest px-2 py-1.5">Suggested Customers</p>
+                <p className="text-[10px] font-bold text-white/30 uppercase tracking-widest px-2 py-1.5">{t.suggestedCustomers}</p>
                 {filtered.map(c => (
                   <button key={c.id} onMouseDown={() => handleSelect(c)}
                     className="w-full flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-white/8 transition-colors text-left group">
@@ -172,7 +158,7 @@ function WelcomeScreen({ onStart }: { onStart: (c: Customer) => void }) {
         {/* Suggested pills */}
         {!selected && !focused && (
           <div className="space-y-2">
-            <p className="text-xs text-white/30 font-medium">Suggested customers</p>
+            <p className="text-xs text-white/30 font-medium">{t.suggestedCustomers}</p>
             <div className="flex flex-wrap justify-center gap-2">
               {CUSTOMERS.map(c => (
                 <button key={c.id} onClick={() => handleSelect(c)}
@@ -196,7 +182,7 @@ function WelcomeScreen({ onStart }: { onStart: (c: Customer) => void }) {
               <p className="text-sm font-bold text-white">{selected.name}</p>
               <p className="text-xs text-white/45">{selected.industry} · {selected.segment}</p>
             </div>
-            <span className="text-[10px] font-bold text-blue-300 uppercase tracking-wide">Ready</span>
+            <span className="text-[10px] font-bold text-blue-300 uppercase tracking-wide">{t.ready}</span>
           </div>
         )}
 
@@ -212,14 +198,14 @@ function WelcomeScreen({ onStart }: { onStart: (c: Customer) => void }) {
           style={canAnalyze ? { background: 'linear-gradient(135deg, #1d4ed8, #4f46e5, #7c3aed)', boxShadow: '0 8px 32px rgba(99,102,241,0.4)' } : {}}
         >
           <Brain className="w-5 h-5" />
-          Analyze Customer
+          {t.analyzeCustomer}
           {canAnalyze && <ChevronRight className="w-4 h-4 opacity-70" />}
         </button>
 
         {canAnalyze && (
           <p className="text-xs text-white/25 flex items-center justify-center gap-1.5 -mt-4">
             <Zap className="w-3 h-3 text-blue-400" />
-            Powered by 5 Specialized AI Agents
+            {t.poweredBy5Agents}
           </p>
         )}
       </div>
@@ -296,9 +282,10 @@ function ProcessingLayout({
 /* ─────────────────────────────────────────────
    STEP ROW (retrieval)
 ───────────────────────────────────────────── */
-function RetrieveRow({ icon: Icon, label, desc, state }: {
+function RetrieveRow({ icon: Icon, label, desc, state, doneLabel, waitingLabel }: {
   icon: React.ElementType; label: string; desc: string;
   state: 'pending' | 'active' | 'done';
+  doneLabel: string; waitingLabel: string;
 }) {
   return (
     <div className={`flex items-center gap-3.5 px-4 py-3.5 rounded-2xl border transition-all duration-400 ${
@@ -320,7 +307,7 @@ function RetrieveRow({ icon: Icon, label, desc, state }: {
           {label}
         </p>
         <p className={`text-xs ${state === 'done' ? 'text-emerald-400/50' : state === 'active' ? 'text-white/45' : 'text-white/15'}`}>
-          {state === 'done' ? 'Retrieved successfully' : state === 'active' ? desc : 'Waiting...'}
+          {state === 'done' ? doneLabel : state === 'active' ? desc : waitingLabel}
         </p>
       </div>
       <div className="shrink-0 w-16 text-right">
@@ -341,10 +328,10 @@ function RetrieveRow({ icon: Icon, label, desc, state }: {
 /* ─────────────────────────────────────────────
    AGENT ROW (analysis)
 ───────────────────────────────────────────── */
-function AgentRow({ icon: Icon, name, desc, gradient, state, successLabel }: {
+function AgentRow({ icon: Icon, name, desc, gradient, state, successLabel, waitingLabel }: {
   icon: React.ElementType; name: string; desc: string; gradient: string;
   state: 'pending' | 'active' | 'done';
-  successLabel?: string;
+  successLabel?: string; waitingLabel: string;
 }) {
   return (
     <div className={`flex items-center gap-3.5 px-4 py-3.5 rounded-2xl border transition-all duration-400 ${
@@ -366,7 +353,7 @@ function AgentRow({ icon: Icon, name, desc, gradient, state, successLabel }: {
           {name}
         </p>
         <p className={`text-xs ${state === 'done' ? 'text-emerald-400/50' : state === 'active' ? 'text-white/45' : 'text-white/15'}`}>
-          {state === 'done' ? (successLabel || 'Completed') : state === 'active' ? desc : 'Waiting...'}
+          {state === 'done' ? (successLabel || 'Completed') : state === 'active' ? desc : waitingLabel}
         </p>
       </div>
       <div className="shrink-0 w-16 text-right">
@@ -395,6 +382,7 @@ export default function IntroExperience({ onComplete }: IntroExperienceProps) {
   const [phase, setPhase] = useState<Phase>('welcome');
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [exitOpacity, setExitOpacity] = useState(1);
+  const { t } = useLang();
 
   /* retrieval state */
   const [retrieveActive, setRetrieveActive] = useState(-1);
@@ -404,6 +392,30 @@ export default function IntroExperience({ onComplete }: IntroExperienceProps) {
   const [analyzeActive, setAnalyzeActive] = useState(-1);
   const [analyzeDone, setAnalyzeDone] = useState<number[]>([]);
   const [showSuccess, setShowSuccess] = useState(false);
+
+  const RETRIEVE_STEPS = [
+    { icon: Building2,  label: t.companyProfile,      desc: t.fetchingFromCRM },
+    { icon: Database,   label: t.bankingProducts,      desc: t.loadingAccountData },
+    { icon: BarChart3,  label: t.financialStatements,  desc: t.retrieving3Year },
+    { icon: FolderOpen, label: t.customerDocuments,    desc: t.checkingDocStore },
+    { icon: Clock,      label: t.relationshipHistory,  desc: t.loadingPrevInteractions },
+  ];
+
+  const ANALYZE_STEPS = [
+    { icon: Building2,  name: t.companyIntelligenceAgent, desc: t.analyzingProfile },
+    { icon: TrendingUp, name: t.financialAnalysisAgent,   desc: t.reviewingFinancials },
+    { icon: FileText,   name: t.complianceDocumentAgent,  desc: t.checkingKYC },
+    { icon: ShieldCheck,name: t.policyEngine,             desc: t.matchingPolicies },
+    { icon: Lightbulb,  name: t.recommendationAgent,      desc: t.generatingBestAction },
+  ];
+
+  const agentSuccessLabels = [
+    t.profileAnalyzed,
+    t.financialsReviewed,
+    t.complianceChecked,
+    t.policiesMatched,
+    t.recommendationGenerated,
+  ];
 
   function handleStart(c: Customer) {
     setCustomer(c);
@@ -420,7 +432,6 @@ export default function IntroExperience({ onComplete }: IntroExperienceProps) {
       setTimeout(() => setRetrieveDone(prev => [...prev, ci]), offset);
       offset += BETWEEN_MS;
     });
-    // After retrieval → analysis phase
     setTimeout(() => {
       setPhase('analyzing');
       startAnalysis();
@@ -437,7 +448,6 @@ export default function IntroExperience({ onComplete }: IntroExperienceProps) {
       offset += BETWEEN_MS;
     });
     setTimeout(() => setShowSuccess(true), offset + 400);
-    // Auto-advance to dashboard
     setTimeout(() => {
       setPhase('exiting');
       setExitOpacity(0);
@@ -464,14 +474,6 @@ export default function IntroExperience({ onComplete }: IntroExperienceProps) {
     'from-blue-500 to-indigo-600',
   ];
 
-  const agentSuccessLabels = [
-    'Profile analyzed',
-    'Financials reviewed',
-    'Compliance checked',
-    'Policies matched',
-    'Recommendation generated',
-  ];
-
   return (
     <div
       className="fixed inset-0 z-50 overflow-hidden"
@@ -482,10 +484,10 @@ export default function IntroExperience({ onComplete }: IntroExperienceProps) {
       {phase === 'retrieving' && customer && (
         <ProcessingLayout
           customer={customer}
-          title="Retrieving Customer Information..."
-          subtitle="Collecting data from internal banking systems."
+          title={t.retrievingCustomerInfo}
+          subtitle={t.collectingData}
           progress={retrieveProgress}
-          progressLabel={`${retrieveDone.length} of ${RETRIEVE_STEPS.length} data sources retrieved`}
+          progressLabel={`${retrieveDone.length} ${t.ofData} ${RETRIEVE_STEPS.length} ${t.dataSourcesRetrieved}`}
         >
           {RETRIEVE_STEPS.map((step, i) => (
             <RetrieveRow
@@ -493,6 +495,8 @@ export default function IntroExperience({ onComplete }: IntroExperienceProps) {
               icon={step.icon}
               label={step.label}
               desc={step.desc}
+              doneLabel={t.retrievedSuccessfully}
+              waitingLabel={t.waiting}
               state={retrieveDone.includes(i) ? 'done' : retrieveActive === i ? 'active' : 'pending'}
             />
           ))}
@@ -502,10 +506,12 @@ export default function IntroExperience({ onComplete }: IntroExperienceProps) {
       {(phase === 'analyzing' || phase === 'exiting') && customer && (
         <ProcessingLayout
           customer={customer}
-          title="Analyzing Customer..."
-          subtitle="AI agents are reviewing all customer information."
+          title={t.analyzingCustomer}
+          subtitle={t.aiAgentsReviewing}
           progress={showSuccess ? 100 : analyzeProgress}
-          progressLabel={showSuccess ? '5 of 5 agents completed' : `${analyzeDone.length} of ${ANALYZE_STEPS.length} agents completed`}
+          progressLabel={showSuccess
+            ? `5 ${t.ofData} 5 ${t.agentsCompleted}`
+            : `${analyzeDone.length} ${t.ofData} ${ANALYZE_STEPS.length} ${t.agentsCompleted}`}
         >
           {ANALYZE_STEPS.map((step, i) => (
             <AgentRow
@@ -515,6 +521,7 @@ export default function IntroExperience({ onComplete }: IntroExperienceProps) {
               desc={step.desc}
               gradient={agentGradients[i]}
               successLabel={agentSuccessLabels[i]}
+              waitingLabel={t.waiting}
               state={analyzeDone.includes(i) ? 'done' : analyzeActive === i ? 'active' : 'pending'}
             />
           ))}
@@ -528,8 +535,8 @@ export default function IntroExperience({ onComplete }: IntroExperienceProps) {
                 <div className="absolute inset-0 rounded-xl bg-emerald-500/15 animate-ping opacity-60" />
               </div>
               <div>
-                <p className="text-sm font-extrabold text-emerald-300">AI Recommendation Generated</p>
-                <p className="text-xs text-emerald-400/55 mt-0.5">Opening dashboard...</p>
+                <p className="text-sm font-extrabold text-emerald-300">{t.aiRecommendationGenerated}</p>
+                <p className="text-xs text-emerald-400/55 mt-0.5">{t.openingDashboard}</p>
               </div>
             </div>
           </div>

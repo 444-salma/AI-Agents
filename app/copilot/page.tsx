@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Send, Sparkles, User, Brain, Zap, FileText, TrendingUp, ShieldCheck, BookOpen, ChevronRight } from 'lucide-react';
+import { fetchCompanyData } from '@/lib/db';
 import {
-  supabase, type Company, type CompanyDocument, type FinancialStatement,
+  type Company, type CompanyDocument, type FinancialStatement,
   type BankingProduct, type TimelineEvent,
 } from '@/lib/supabase';
 import {
@@ -143,18 +144,11 @@ export default function CopilotPage() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    Promise.all([
-      supabase.from('companies').select('*').eq('id', COMPANY_ID).single(),
-      supabase.from('financial_statements').select('*').eq('company_id', COMPANY_ID).order('year', { ascending: false }),
-      supabase.from('documents').select('*').eq('company_id', COMPANY_ID),
-      supabase.from('banking_products').select('*').eq('company_id', COMPANY_ID),
-      supabase.from('timeline_events').select('*').eq('company_id', COMPANY_ID).order('event_date', { ascending: false }),
-    ]).then(([c, s, d, p, t]) => {
-      const company = c.data as Company;
-      const ci = runCompanyIntelligenceAgent(company, (p.data || []) as BankingProduct[], (t.data || []) as TimelineEvent[]);
-      const fa = runFinancialAnalysisAgent(company, (s.data || []) as FinancialStatement[]);
-      const comp = runComplianceAgent(company, (d.data || []) as CompanyDocument[]);
-      const nba = runNextBestActionAgent(company, ci, fa, comp, (p.data || []) as BankingProduct[]);
+    fetchCompanyData(COMPANY_ID).then(({ company, statements, documents, products, timelineEvents }) => {
+      const ci = runCompanyIntelligenceAgent(company, products as BankingProduct[], timelineEvents as TimelineEvent[]);
+      const fa = runFinancialAnalysisAgent(company, statements as FinancialStatement[]);
+      const comp = runComplianceAgent(company, documents as CompanyDocument[]);
+      const nba = runNextBestActionAgent(company, ci, fa, comp, products as BankingProduct[]);
       setCtx({ company, ci, fa, comp, nba });
       setLoading(false);
     });

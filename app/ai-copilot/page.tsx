@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Send, Sparkles, User, Brain, FileText, TrendingUp, Shield, BookOpen, RotateCcw } from 'lucide-react';
-import { supabase, type Company, type FinancialStatement, type CompanyDocument, type BankingProduct, type TimelineEvent } from '@/lib/supabase';
+import { fetchCompanyData } from '@/lib/db';
+import { type Company, type FinancialStatement, type CompanyDocument, type BankingProduct, type TimelineEvent } from '@/lib/supabase';
 import {
   runCompanyIntelligenceAgent,
   runFinancialAnalysisAgent,
@@ -125,18 +126,11 @@ export default function AICopilotPage() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    Promise.all([
-      supabase.from('companies').select('*').eq('id', COMPANY_ID).single(),
-      supabase.from('financial_statements').select('*').eq('company_id', COMPANY_ID).order('year', { ascending: false }),
-      supabase.from('documents').select('*').eq('company_id', COMPANY_ID),
-      supabase.from('banking_products').select('*').eq('company_id', COMPANY_ID),
-      supabase.from('timeline_events').select('*').eq('company_id', COMPANY_ID).order('event_date', { ascending: false }),
-    ]).then(([c, s, d, p, t]) => {
-      const co = c.data as Company;
-      const ciResult = runCompanyIntelligenceAgent(co, (p.data || []) as BankingProduct[], (t.data || []) as TimelineEvent[]);
-      const faResult = runFinancialAnalysisAgent(co, (s.data || []) as FinancialStatement[]);
-      const compResult = runComplianceAgent(co, (d.data || []) as CompanyDocument[]);
-      const nbaResult = runNextBestActionAgent(co, ciResult, faResult, compResult, (p.data || []) as BankingProduct[]);
+    fetchCompanyData(COMPANY_ID).then(({ company: co, statements, documents, products, timelineEvents }) => {
+      const ciResult = runCompanyIntelligenceAgent(co, products as BankingProduct[], timelineEvents as TimelineEvent[]);
+      const faResult = runFinancialAnalysisAgent(co, statements as FinancialStatement[]);
+      const compResult = runComplianceAgent(co, documents as CompanyDocument[]);
+      const nbaResult = runNextBestActionAgent(co, ciResult, faResult, compResult, products as BankingProduct[]);
       setCompany(co);
       setCi(ciResult);
       setFa(faResult);

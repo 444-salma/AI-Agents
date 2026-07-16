@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Building2, TrendingUp, FileText, Target, Shield, CheckCircle2, Clock, ChevronDown } from 'lucide-react';
-import { supabase, type Company, type FinancialStatement, type CompanyDocument, type BankingProduct, type TimelineEvent } from '@/lib/supabase';
+import { Building2, TrendingUp, FileText, Target, Shield, CircleCheck as CheckCircle2, Clock, ChevronDown } from 'lucide-react';
+import { fetchCompanyData } from '@/lib/db';
+import { type Company, type FinancialStatement, type CompanyDocument, type BankingProduct, type TimelineEvent } from '@/lib/supabase';
 import {
   runCompanyIntelligenceAgent,
   runFinancialAnalysisAgent,
@@ -79,21 +80,15 @@ export default function AIAgentsPage() {
   const [ran, setRan] = useState(false);
 
   useEffect(() => {
-    Promise.all([
-      supabase.from('companies').select('*').eq('id', COMPANY_ID).single(),
-      supabase.from('financial_statements').select('*').eq('company_id', COMPANY_ID).order('year', { ascending: false }),
-      supabase.from('documents').select('*').eq('company_id', COMPANY_ID),
-      supabase.from('banking_products').select('*').eq('company_id', COMPANY_ID),
-      supabase.from('timeline_events').select('*').eq('company_id', COMPANY_ID).order('event_date', { ascending: false }),
-    ]).then(([c, s, d, p, t]) => {
-      setCompany(c.data as Company);
+    fetchCompanyData(COMPANY_ID).then(({ company: co, statements, documents, products, timelineEvents }) => {
+      setCompany(co);
       setLoading(false);
       runSequence(
-        c.data as Company,
-        (s.data || []) as FinancialStatement[],
-        (d.data || []) as CompanyDocument[],
-        (p.data || []) as BankingProduct[],
-        (t.data || []) as TimelineEvent[]
+        co,
+        statements as FinancialStatement[],
+        documents as CompanyDocument[],
+        products as BankingProduct[],
+        timelineEvents as TimelineEvent[]
       );
     });
   }, []);

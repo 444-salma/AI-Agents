@@ -1,13 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Sparkles, ArrowRight, Bell, Mail, X, Copy, Send, Building2, TrendingUp, FileText, ShieldCheck, CircleCheck as CheckCircle2, TriangleAlert as AlertTriangle, Brain, Zap, ArrowDown } from 'lucide-react';
+import { fetchCompanyData } from '@/lib/db';
 import {
-  Sparkles, ArrowRight, Bell, Mail, X, Copy, Send,
-  Building2, TrendingUp, FileText, ShieldCheck,
-  CheckCircle2, AlertTriangle, Brain, Zap, ArrowDown,
-} from 'lucide-react';
-import {
-  supabase, type Company, type CompanyDocument,
+  type Company, type CompanyDocument,
   type FinancialStatement, type BankingProduct, type TimelineEvent,
 } from '@/lib/supabase';
 import {
@@ -100,25 +97,16 @@ export default function Dashboard() {
       sessionStorage.removeItem('ai-analyzed');
     }
 
-    Promise.all([
-      supabase.from('companies').select('*').eq('id', COMPANY_ID).single(),
-      supabase.from('financial_statements').select('*').eq('company_id', COMPANY_ID).order('year', { ascending: false }),
-      supabase.from('documents').select('*').eq('company_id', COMPANY_ID),
-      supabase.from('banking_products').select('*').eq('company_id', COMPANY_ID),
-      supabase.from('timeline_events').select('*').eq('company_id', COMPANY_ID).order('event_date', { ascending: false }),
-    ]).then(([c, s, d, p, t]) => {
-      const co = c.data as Company;
-      const ciR = runCompanyIntelligenceAgent(co, (p.data || []) as BankingProduct[], (t.data || []) as TimelineEvent[]);
-      const faR = runFinancialAnalysisAgent(co, (s.data || []) as FinancialStatement[]);
-      const compR = runComplianceAgent(co, (d.data || []) as CompanyDocument[]);
-      const nbaR = runNextBestActionAgent(co, ciR, faR, compR, (p.data || []) as BankingProduct[]);
+    fetchCompanyData(COMPANY_ID).then(({ company: co, statements, documents, products, timelineEvents }) => {
+      const ciR = runCompanyIntelligenceAgent(co, products as BankingProduct[], timelineEvents as TimelineEvent[]);
+      const faR = runFinancialAnalysisAgent(co, statements as FinancialStatement[]);
+      const compR = runComplianceAgent(co, documents as CompanyDocument[]);
+      const nbaR = runNextBestActionAgent(co, ciR, faR, compR, products as BankingProduct[]);
       setCompany(co); setCi(ciR); setFa(faR); setComp(compR); setNba(nbaR);
       setLoading(false);
-      // Animate pipeline
       for (let i = 0; i <= workflowSteps.length; i++) {
         setTimeout(() => setPipelineStep(i), 600 + i * 350);
       }
-      // Animate AI summary
       setTimeout(() => { setSummaryVisible(true); setTimeout(() => setTypingDone(true), 1200); }, 400);
     });
   }, []);

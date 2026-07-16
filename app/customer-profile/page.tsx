@@ -1,13 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { Building2, TrendingUp, FileText, ShieldCheck, ArrowRight, Sparkles, TriangleAlert as AlertTriangle, CircleCheck as CheckCircle2, Clock, User, Phone, ChevronRight, CircleDot, Wallet, ChartBar as BarChart3, RefreshCw, Brain } from 'lucide-react';
+import { fetchCompanyData } from '@/lib/db';
 import {
-  Building2, TrendingUp, FileText, ShieldCheck, ArrowRight,
-  Sparkles, AlertTriangle, CheckCircle2, Clock, User, Phone,
-  ChevronRight, CircleDot, Wallet, BarChart3, RefreshCw, Brain,
-} from 'lucide-react';
-import {
-  supabase, type Company, type CompanyDocument, type FinancialStatement,
+  type Company, type CompanyDocument, type FinancialStatement,
   type BankingProduct, type TimelineEvent,
 } from '@/lib/supabase';
 import {
@@ -78,23 +75,16 @@ export default function CustomerProfile() {
   const [activeTab, setActiveTab] = useState<'overview' | 'financials' | 'documents' | 'products'>('overview');
 
   useEffect(() => {
-    Promise.all([
-      supabase.from('companies').select('*').eq('id', COMPANY_ID).single(),
-      supabase.from('financial_statements').select('*').eq('company_id', COMPANY_ID).order('year', { ascending: false }),
-      supabase.from('documents').select('*').eq('company_id', COMPANY_ID),
-      supabase.from('banking_products').select('*').eq('company_id', COMPANY_ID),
-      supabase.from('timeline_events').select('*').eq('company_id', COMPANY_ID).order('event_date', { ascending: false }),
-    ]).then(([c, s, d, p, t]) => {
-      const co = c.data as Company;
-      const st = (s.data || []) as FinancialStatement[];
-      const docs = (d.data || []) as CompanyDocument[];
-      const prods = (p.data || []) as BankingProduct[];
-      const tl = (t.data || []) as TimelineEvent[];
-      setCompany(co); setProducts(prods); setStatements(st);
-      const ciR = runCompanyIntelligenceAgent(co, prods, tl);
+    fetchCompanyData(COMPANY_ID).then(({ company: co, statements, documents, products: prods, timelineEvents }) => {
+      const st = statements as FinancialStatement[];
+      const docs = documents as CompanyDocument[];
+      const prdsTyped = prods as BankingProduct[];
+      const tl = timelineEvents as TimelineEvent[];
+      setCompany(co); setProducts(prdsTyped); setStatements(st);
+      const ciR = runCompanyIntelligenceAgent(co, prdsTyped, tl);
       const faR = runFinancialAnalysisAgent(co, st);
       const compR = runComplianceAgent(co, docs);
-      const nbaR = runNextBestActionAgent(co, ciR, faR, compR, prods);
+      const nbaR = runNextBestActionAgent(co, ciR, faR, compR, prdsTyped);
       setCi(ciR); setFa(faR); setComp(compR); setNba(nbaR);
       setLoading(false);
     });

@@ -304,6 +304,7 @@ export default function FinancingRequestsPage() {
   const totalAmt = filtered.reduce((s, a) => s + a.requestedAmount, 0);
 
   const activeFilterMeta = FILTERS.find(f => f.key === activeFilter)!;
+  const ActiveFilterIcon = activeFilterMeta.icon;
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
@@ -334,7 +335,7 @@ export default function FinancingRequestsPage() {
         {activeFilter !== 'All' && totalAmt > 0 && (
           <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${activeFilterMeta.iconBg}`}>
-              <activeFilterMeta.icon className={`w-4 h-4 ${activeFilterMeta.color}`} />
+              <ActiveFilterIcon className={`w-4 h-4 ${activeFilterMeta.color}`} />
             </div>
             <div>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{activeFilterMeta.labelAr} — Total Requested</p>
@@ -420,7 +421,7 @@ export default function FinancingRequestsPage() {
           <div className="flex items-center gap-3">
             <div className="h-px flex-1 bg-slate-200 dark:bg-slate-800" />
             <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold ${activeFilterMeta.iconBg}`}>
-              <activeFilterMeta.icon className={`w-3.5 h-3.5 ${activeFilterMeta.color}`} />
+              <ActiveFilterIcon className={`w-3.5 h-3.5 ${activeFilterMeta.color}`} />
               <span className={`${activeFilterMeta.color}`}>{activeFilterMeta.labelAr}</span>
               <span className="text-slate-400">·</span>
               <span className="text-slate-500">{filtered.length} application{filtered.length !== 1 ? 's' : ''}</span>

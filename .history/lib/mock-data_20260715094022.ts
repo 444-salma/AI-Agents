@@ -1,0 +1,130 @@
+import type {
+  Company,
+  CompanyDocument,
+  FinancialStatement,
+  BankingProduct,
+  TimelineEvent,
+} from "@/lib/supabase";
+
+export const mockCompany: Company = {
+  id: "11111111-1111-1111-1111-111111111111",
+  name: "AlMadar Construction Group",
+  industry: "Construction",
+  sector: "Real Estate & Infrastructure",
+  registration_number: "CR-1010234567",
+  tax_id: "TAX-300123456",
+  founded_year: 2001,
+  headquarters: "Riyadh, Saudi Arabia",
+  country: "Saudi Arabia",
+  employees_count: 4500,
+  annual_revenue: 2800000000,
+  website: "https://almadar.example.com",
+  description:
+    "A leading construction and infrastructure company operating across Saudi Arabia.",
+  relationship_manager: "Ahmed Al-Rashid",
+  relationship_since: "2015-03-01",
+  risk_rating: "Low",
+  customer_segment: "Corporate",
+  status: "Active",
+  logo_initials: "AC",
+};
+
+export const mockProducts: BankingProduct[] = [
+  {
+    id: "p1",
+    company_id: mockCompany.id,
+    product_type: "Credit Facility",
+    product_name: "Revolving Credit Facility",
+    account_number: "CF-2023-0045",
+    limit_amount: 500000000,
+    outstanding_amount: 320000000,
+    currency: "SAR",
+    start_date: "2023-01-01",
+    expiry_date: "2027-01-15",
+    status: "Active",
+  },
+];
+
+export const mockStatements: FinancialStatement[] = [
+  {
+    id: "fs1",
+    company_id: mockCompany.id,
+    year: 2023,
+    total_assets: 4200000000,
+    total_liabilities: 2800000000,
+    total_equity: 1400000000,
+    total_revenue: 2800000000,
+    gross_profit: 620000000,
+    operating_income: 380000000,
+    net_income: 280000000,
+    operating_cash_flow: 350000000,
+    investing_cash_flow: -120000000,
+    financing_cash_flow: -80000000,
+    current_ratio: 1.85,
+    debt_to_equity: 2,
+    return_on_equity: 20,
+    return_on_assets: 6.6,
+    gross_margin: 22.1,
+    net_margin: 10,
+  },
+];
+
+export const mockDocuments: CompanyDocument[] = [
+  {
+    id: "d1",
+    company_id: mockCompany.id,
+    document_type: "Commercial Registration",
+    document_name: "Commercial Registration",
+    status: "Needs Update",
+    expiry_date: "2026-08-15",
+    upload_date: "2025-08-15",
+    issuing_authority: "Ministry of Commerce",
+    notes: "Commercial Registration expires within 30 days.",
+    required_for: ["Credit Facility", "Corporate Account"],
+  },
+  {
+    id: "d2",
+    company_id: mockCompany.id,
+    document_type: "KYC Form",
+    document_name: "Corporate KYC Form",
+    status: "Needs Update",
+    expiry_date: null,
+    upload_date: "2024-01-01",
+    issuing_authority: null,
+    notes: "Annual KYC refresh is overdue.",
+    required_for: ["Corporate Banking"],
+  },
+  {
+    id: "d3",
+    company_id: mockCompany.id,
+    document_type: "Financial Statements",
+    document_name: "Audited Financial Statements 2023",
+    status: "Complete",
+    expiry_date: null,
+    upload_date: "2024-03-01",
+    issuing_authority: "External Auditor",
+    notes: null,
+    required_for: ["Credit Facility"],
+  },
+];
+
+export const mockTimeline: TimelineEvent[] = [
+  {
+    id: "t1",
+    company_id: mockCompany.id,
+    event_type: "Meeting",
+    title: "Quarterly Review Meeting",
+    description: "Business review meeting with CFO and RM team.",
+    event_date: "2024-01-15",
+    created_by: "Ahmed Al-Rashid",
+  },
+  {
+    id: "t2",
+    company_id: mockCompany.id,
+    event_type: "Alert",
+    title: "Commercial Registration Expiry Alert",
+    description: "Commercial Registration due for renewal within 30 days.",
+    event_date: "2026-07-15",
+    created_by: "System",
+  },
+];

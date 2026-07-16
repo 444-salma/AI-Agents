@@ -190,10 +190,10 @@ export default function CopilotPage() {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-3.5rem)] bg-background">
+    <div className="flex flex-col min-h-[calc(100vh-3.5rem)] bg-background overflow-y-auto">
 
       {/* Chat area */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1">
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
 
           {/* Welcome state */}
@@ -211,11 +211,11 @@ export default function CopilotPage() {
               </div>
 
               <div>
-                <h2 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Ask About This Customer</h2>
-                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1.5">
-                  What would you like to know about <span className="font-semibold text-blue-600 dark:text-blue-400">{ctx?.company.name}</span>?
+                <h2 className="text-2xl font-extrabold text-white">Ask About This Customer</h2>
+                <p className="text-sm text-slate-300 mt-1.5">
+                  What would you like to know about <span className="font-semibold text-blue-300">{ctx?.company.name}</span>?
                 </p>
-                <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">Select a question below or type your own.</p>
+                <p className="text-xs text-slate-400 mt-1">Select a question below or type your own.</p>
               </div>
 
               {/* Suggested prompts */}
@@ -224,13 +224,13 @@ export default function CopilotPage() {
                   <button
                     key={text}
                     onClick={() => send(text)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-white/[0.04] text-slate-700 dark:text-slate-300 hover:border-blue-300 dark:hover:border-blue-700/50 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 transition-all group text-left card-lift"
+                    className="flex items-center gap-3 px-4 py-3 rounded-2xl border border-white/[0.12] bg-white/[0.06] text-slate-100 hover:border-blue-400/50 hover:bg-blue-900/30 transition-all group text-left card-lift"
                   >
-                    <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-slate-100 dark:bg-white/[0.06] group-hover:bg-blue-100 dark:group-hover:bg-blue-900/40 transition-colors shrink-0">
-                      <Icon className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-white/[0.08] group-hover:bg-blue-800/50 transition-colors shrink-0">
+                      <Icon className="w-3.5 h-3.5 text-slate-300 group-hover:text-blue-300 transition-colors" />
                     </div>
-                    <span className="text-sm font-medium flex-1">{text}</span>
-                    <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 group-hover:text-blue-400 transition-colors shrink-0" />
+                    <span className="text-sm font-medium flex-1 text-slate-100">{text}</span>
+                    <ChevronRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-blue-400 transition-colors shrink-0" />
                   </button>
                 ))}
               </div>

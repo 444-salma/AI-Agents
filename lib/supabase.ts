@@ -1,12 +1,9 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl =
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co";
-
-const supabaseAnonKey =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder-anon-key";
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export type Company = {
   id: string;
@@ -71,7 +68,7 @@ export type CompanyDocument = {
   company_id: string;
   document_type: string;
   document_name: string;
-  status: "Complete" | "Needs Update" | "Missing";
+  status: 'Complete' | 'Needs Update' | 'Missing';
   expiry_date: string | null;
   upload_date: string | null;
   issuing_authority: string | null;

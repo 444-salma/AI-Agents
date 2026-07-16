@@ -8,7 +8,12 @@ import { useLang } from '@/lib/language-context';
 
 export default function Shell({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [introComplete, setIntroComplete] = useState(false);
+  const [introComplete, setIntroComplete] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem('ai-analyzed') === 'true';
+    }
+    return false;
+  });
   const { lang } = useLang();
 
   return (
